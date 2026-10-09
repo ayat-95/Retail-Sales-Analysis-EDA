@@ -1,0 +1,7 @@
+Transaction Date --- convarte to Date & Feature Engineering 
+ Item                1213 missing values  (10%) imputaion   Done 
+Price Per Unit       609  missing values  (5%)  imputaion   (Total_spent/ Quantity )                   ------ Done
+Quantity             604  missing values  (5%)  imputaion   (by median becuse is discret number)       ------ Done 
+Total Spent          604  missing values  (5%)  imputaion   (price * Quantity)                         ------ Done                     
+Discount Applied    4199  missing values  (33%) imputaion   UnKnown                                     ------ Done
+Total_spent         outliers            its normal  (will not delete  and we will not replace)          ------ Done
