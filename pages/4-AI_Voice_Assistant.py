@@ -16,8 +16,6 @@ import streamlit.components.v1 as components
 import requests
 from dotenv import load_dotenv
 
-from utils.data import load_data
-
 # Load environment variables
 load_dotenv()
 
@@ -53,8 +51,20 @@ st.markdown("""
 # ==============================================================================
 # 2. Data Loading & Ground Truth Statistics
 # ==============================================================================
+@st.cache_data
+def load_sales_data():
+    path = "retail_store_sales_clean.parquet"
+    if not os.path.exists(path):
+        path = "retail_store_sales.csv"
+        df = pd.read_csv(path)
+    else:
+        df = pd.read_parquet(path)
+    if 'Transaction Date' in df.columns:
+        df['Transaction Date'] = pd.to_datetime(df['Transaction Date'], errors='coerce')
+    return df
+
 try:
-    df = load_data()
+    df = load_sales_data()
 except Exception as e:
     st.error(f"Error loading sales data: {e}")
     st.stop()
