@@ -139,7 +139,7 @@ def query_gemini_analyst(user_query: str, dataframe: pd.DataFrame) -> dict:
     if not api_key:
         return {
             "spoken_text": "Gemini API key is not configured in .env file.",
-            "analysis": "**GEMINI_API_KEY** is missing from `.env`.",
+            "analysis": "⚠️ **GEMINI_API_KEY** is missing from `.env`.",
             "code": None
         }
 
@@ -309,7 +309,7 @@ def render_voice_interface(spoken_text: str = "", spoken_lang: str = "en", token
     <body>
         <div class="voice-panel">
             <div class="left-side">
-                <button id="micBtn" class="mic-btn" onclick="toggleRecognition()" title="Click to speak"></button>
+                <button id="micBtn" class="mic-btn" onclick="toggleRecognition()" title="Click to speak">🎙️</button>
                 <div class="status-text" id="statusLabel">Click the mic, speak, and it answers automatically</div>
                 <select id="langChoice" class="lang-select" onchange="changeLang()">
                     <option value="en-US">🇺🇸 English</option>
@@ -317,8 +317,8 @@ def render_voice_interface(spoken_text: str = "", spoken_lang: str = "en", token
                 </select>
             </div>
             <div>
-                <button class="btn-action" onclick="playSpeech()">Play Voice</button>
-                <button class="btn-action" onclick="stopSpeech()">Stop</button>
+                <button class="btn-action" onclick="playSpeech()">🔊 Play Voice</button>
+                <button class="btn-action" onclick="stopSpeech()">⏹️ Stop</button>
             </div>
         </div>
 
@@ -339,7 +339,7 @@ def render_voice_interface(spoken_text: str = "", spoken_lang: str = "en", token
                 recognition.onstart = function() {{
                     isListening = true;
                     document.getElementById('micBtn').classList.add('listening');
-                    document.getElementById('statusLabel').innerText = "Listening... Speak now!";
+                    document.getElementById('statusLabel').innerText = "🔴 Listening... Speak now!";
                 }};
 
                 recognition.onresult = function(e) {{
@@ -354,7 +354,7 @@ def render_voice_interface(spoken_text: str = "", spoken_lang: str = "en", token
                     }}
 
                     if (finalTranscript && finalTranscript.trim().length > 1) {{
-                        document.getElementById('statusLabel').innerText = "Sending: " + finalTranscript;
+                        document.getElementById('statusLabel').innerText = "✅ Sending: " + finalTranscript;
                         submitTextToStreamlit(finalTranscript.trim());
                     }}
                 }};
@@ -465,7 +465,7 @@ if "play_token" not in st.session_state:
 # ==============================================================================
 # 6. Page UI
 # ==============================================================================
-st.markdown('<div class="main-title">AI Voice Sales Assistant</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🎙️ AI Voice Sales Assistant</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Talk directly with the AI voice agent to analyze retail store sales data in English or Arabic.</div>', unsafe_allow_html=True)
 
 # Voice Bar
@@ -479,20 +479,20 @@ render_voice_interface(
 c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1, 0.8])
 clicked = None
 with c1:
-    if st.button("Top Categories", use_container_width=True):
+    if st.button("🏆 Top Categories", use_container_width=True):
         clicked = "What are the top product categories by total sales revenue? Provide exact revenue and share."
 with c2:
-    if st.button("Online vs In-store", use_container_width=True):
+    if st.button("📍 Online vs In-store", use_container_width=True):
         clicked = "Compare sales performance between Online and In-store channels with exact figures."
 with c3:
-    if st.button("Payment Methods", use_container_width=True):
+    if st.button("💳 Payment Methods", use_container_width=True):
         clicked = "What is the breakdown of total revenue by payment method?"
 with c4:
-    if st.button("Weekend vs Weekday", use_container_width=True):
+    if st.button("🗓️ Weekend vs Weekday", use_container_width=True):
         clicked = "Compare total sales between Weekend and Weekdays"
 with c5:
     # Clear Results Button
-    if st.button("Clear Results", use_container_width=True, type="secondary"):
+    if st.button("🗑️ Clear Results", use_container_width=True, type="secondary"):
         st.session_state.conversation = []
         st.session_state.last_spoken = ""
         st.session_state.play_token = ""
@@ -502,7 +502,7 @@ st.markdown("---")
 
 # Render Native Streamlit Chat Messages
 for msg in st.session_state.conversation:
-    with st.chat_message(msg["role"]):
+    with st.chat_message(msg["role"], avatar="👤" if msg["role"] == "user" else "🤖"):
         st.markdown(msg["text"])
         if msg.get("fig") is not None:
             st.plotly_chart(msg["fig"], use_container_width=True)
