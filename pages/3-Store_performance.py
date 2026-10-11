@@ -1,7 +1,10 @@
-import pandas as pd
-import numpy as np
 import plotly.express as px
 import streamlit  as st
+
+from styles.theme import apply_theme, kpi_card
+from utils.data import apply_filters, load_data
+from utils.paths import STORE_IMAGE
+from utils.ui import render_filters
 
 # ==================================================================
 
@@ -16,108 +19,8 @@ st.set_page_config(page_title= 'Retail sales Analysis',
 # Center text and control color
 # CSS
 
-st.markdown("""
-<style>
-
-    /* Main background */
-    .stApp {
-        background-color: #F6F8FB;
-    }
-
-    /* Main content */
-    .main .block-container {
-        padding-top: 2rem;
-        padding-left: 3rem;
-        padding-right: 3rem;
-        max-width: 1500px;
-    }
-
-    /* Sidebar */
-    section[data-testid="stSidebar"] {
-        background-color: #EEF2F7;
-        border-right: 1px solid #D9E1EA;
-    }
-
-    section[data-testid="stSidebar"] > div {
-        padding-top: 2rem;
-    }
-
-    /* Dashboard green accents for selected sidebar filters */
-    section[data-testid="stSidebar"] [data-baseweb="tag"] {
-        background-color: #245C54;
-    }
-
-    section[data-testid="stSidebar"] [data-baseweb="select"] > div:focus-within {
-        border-color: #245C54;
-        box-shadow: 0 0 0 1px #245C54;
-    }
-
-    section[data-testid="stSidebar"] [role="option"][aria-selected="true"] {
-        background-color: #E6F7F3;
-    }
-
-    /* Dashboard title */
-    .dashboard-title {
-        font-size: 38px;
-        font-weight: 800;
-        color: #245c54;
-        margin-bottom: 5px;
-    }
-
-    .dashboard-subtitle {
-        font-size: 16px;
-        color: #245c54;
-        margin-bottom: 25px;
-    }
-
-    /* KPI Card */
-    .kpi-card {
-        background-color: #245c54;
-        padding: 22px;
-        border-radius: 15px;
-        min-height: 135px;
-        box-shadow: 0px 5px 15px rgba(23, 35, 56, 0.12);
-        margin-bottom: 20px;
-    }
-
-    .kpi-title {
-        color: #9FB2CC;
-        font-size: 13px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .kpi-value {
-        color: white;
-        font-size: 30px;
-        font-weight: 800;
-        margin-top: 10px;
-    }
-
-
-    /* Section title */
-    .section-title {
-        border-left: 5px solid #19B5D8;
-        padding-left: 12px;
-        color: #172033;
-        font-size: 22px;
-        font-weight: 750;
-        margin-top: 25px;
-        margin-bottom: 20px;
-    }
-
-    /* Insight box */
-    .insight-box {
-        background-color: white;
-        border-radius: 15px;
-        padding: 20px;
-        border: 1px solid #E5EAF0;
-        box-shadow: 0px 4px 12px rgba(23, 35, 56, 0.06);
-    }
-
-</style>
-""", unsafe_allow_html=True)
+# Shared dashboard styling (see styles/theme.py)
+apply_theme(title_color="#245c54", subtitle_color="#245c54", kpi_color="#245c54")
 
 #==================================================================
 #Title in html
@@ -136,8 +39,8 @@ st.markdown(
 
 #===================================================================
 
-# insert pic 
-st.image ('Picture For Project 2 .png.jpg')
+# insert pic
+st.image(str(STORE_IMAGE))
 #==================================================================
 #Title in html
 
@@ -153,69 +56,24 @@ st.markdown(
     unsafe_allow_html=True
 )
 #===========================================================================
-# Load Data  
+# Load Data
 
-df = pd.read_parquet("retail_store_sales_clean.parquet")
+df = load_data()
 
 
 #==================================================================
 
-# Fillters 
+# Fillters
 
-st.sidebar.markdown(
-    "## 🔎 Dashboard Filters"
-)
-
-# 1 Year filters
-df_sorted = df.sort_values(by='Transaction Date', ascending=True)
-Year_list = ["Select All"]+ df_sorted['Year'].unique().tolist()
-selected_year = st.sidebar.multiselect("📅 Year",
-  Year_list,default=["Select All"] 
-)
-
-# 2 Category 
-Categories = df['Category'].unique()
-Categor_list =["Select All"]+df['Category'].unique().tolist()
-selected_Category = st.sidebar.multiselect('Category',
-                                           Categor_list,
-                                           default= ["Select All"]
-                                           )
-
-# 3 Payment Methods = 
-Payment_Methods = df['Payment Method'].unique()
-Method_list =["Select All"]+df['Payment Method'].unique().tolist()
-selected_Payment_Method = st.sidebar.multiselect('Payment Method',
-                                                 Method_list,
-                                                 default=["Select All"]
-                                                 
-     )
-
-# 4 Location
-Locations = df['Location'].unique()
-Location_list = ["Select All"]+df['Location'].unique().tolist()
-selected_Location = st.sidebar.multiselect('Location',
-                                            Location_list,
-                                             default=["Select All"] )
+selections = render_filters(df, key_prefix="store")
 
 #==========================================================================
-# Applied Filters 
+# Applied Filters
 
-filterd_df = df.copy()
-
-if "Select All" not in selected_year:
-    filterd_df = filterd_df[filterd_df['Year'].isin(selected_year)]
-
-if "Select All" not in selected_Category:    
-    filterd_df=filterd_df[filterd_df['Category'].isin(selected_Category)]
-
-if "Select All" not in selected_Payment_Method:     
-   filterd_df=filterd_df[filterd_df['Payment Method'].isin(selected_Payment_Method)]
-
-if "Select All" not in selected_Location:   
-   filterd_df= filterd_df[filterd_df['Location'].isin(selected_Location)]
+filterd_df = apply_filters(df, selections)
 
 #========================================================================
-# KPIs 
+# KPIs
 
 
 
@@ -231,40 +89,19 @@ Total_Items = filterd_df['Item'].nunique()
 col1, col2, col3 ,col4 =st.columns(4)
 
 with col1:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-title">Total Revenue</div>
-        <div class="kpi-value">${Total_Revenue:,.0f}</div>
-    
-    </div>
-    """, unsafe_allow_html=True)
+    kpi_card("Total Revenue", f"${Total_Revenue:,.0f}")
 
 
 with col2:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-title">Total Items</div>
-        <div class="kpi-value">{Total_Items:,}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    kpi_card("Total Items", f"{Total_Items:,}")
 
 
 with col3:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-title"> Quantity Sold</div>
-        <div class="kpi-value">{Total_Quantity_Sold:,.0f}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    kpi_card(" Quantity Sold", f"{Total_Quantity_Sold:,.0f}")
 
 
 with col4:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-title"> Unique Customer </div>
-        <div class="kpi-value">{Unique_Customers:,}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    kpi_card(" Unique Customer ", f"{Unique_Customers:,}")
 
 #==================================================================================
 
