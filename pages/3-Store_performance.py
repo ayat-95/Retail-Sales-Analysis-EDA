@@ -26,7 +26,7 @@ apply_theme(title_color="#245c54", subtitle_color="#245c54", kpi_color="#245c54"
 #Title in html
 
 st.markdown(
-    '<div class="dashboard-title">🛍️ Retail Store Sales Dashboard</div>',
+    '<div class="dashboard-title">Retail Store Sales Dashboard</div>',
     unsafe_allow_html=True
 )
 
@@ -45,7 +45,7 @@ st.image(str(STORE_IMAGE))
 #Title in html
 
 st.markdown(
-    '<div class="dashboard-title">📦Retail Store Analysis </div>',
+    '<div class="dashboard-title">Retail Store Analysis </div>',
     unsafe_allow_html=True
 )
 
@@ -112,8 +112,8 @@ with col4:
 # Tabs for Product Analysis and  Customer Analysis
 
 tab1, tab2 ,tab3,tab4= st.tabs([
-    "📦 Product Analysis",
-    "👥 Customer Analysis",
+    " Product Analysis",
+    " Customer Analysis",
     "  Payment Analysis",
     "  Location Analysis"
 

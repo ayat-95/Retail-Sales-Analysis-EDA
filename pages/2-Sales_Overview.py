@@ -92,7 +92,7 @@ with col4:
 
 # Title of Sales Performance
 
-section_title("📊 Sales Performance")
+section_title(" Sales Performance")
 
 
 #=================================================================================
