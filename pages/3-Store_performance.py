@@ -123,7 +123,7 @@ st.markdown("""
 #Title in html
 
 st.markdown(
-    '<div class="dashboard-title">🛍️ Retail Store Sales Dashboard</div>',
+    '<div class="dashboard-title">Retail Store Sales Dashboard</div>',
     unsafe_allow_html=True
 )
 
@@ -136,13 +136,13 @@ st.markdown(
 
 #===================================================================
 
-# insert pic 
+# insert pic
 st.image ('Picture For Project 2 .png.jpg')
 #==================================================================
 #Title in html
 
 st.markdown(
-    '<div class="dashboard-title">📦Retail Store Analysis </div>',
+    '<div class="dashboard-title">Retail Store Analysis </div>',
     unsafe_allow_html=True
 )
 
@@ -153,27 +153,27 @@ st.markdown(
     unsafe_allow_html=True
 )
 #===========================================================================
-# Load Data  
+# Load Data
 
 df = pd.read_parquet("retail_store_sales_clean.parquet")
 
 
 #==================================================================
 
-# Fillters 
+# Fillters
 
 st.sidebar.markdown(
-    "## 🔎 Dashboard Filters"
+    "## Dashboard Filters"
 )
 
 # 1 Year filters
 df_sorted = df.sort_values(by='Transaction Date', ascending=True)
 Year_list = ["Select All"]+ df_sorted['Year'].unique().tolist()
-selected_year = st.sidebar.multiselect("📅 Year",
-  Year_list,default=["Select All"] 
+selected_year = st.sidebar.multiselect("Year",
+  Year_list,default=["Select All"]
 )
 
-# 2 Category 
+# 2 Category
 Categories = df['Category'].unique()
 Categor_list =["Select All"]+df['Category'].unique().tolist()
 selected_Category = st.sidebar.multiselect('Category',
@@ -181,13 +181,13 @@ selected_Category = st.sidebar.multiselect('Category',
                                            default= ["Select All"]
                                            )
 
-# 3 Payment Methods = 
+# 3 Payment Methods =
 Payment_Methods = df['Payment Method'].unique()
 Method_list =["Select All"]+df['Payment Method'].unique().tolist()
 selected_Payment_Method = st.sidebar.multiselect('Payment Method',
                                                  Method_list,
                                                  default=["Select All"]
-                                                 
+
      )
 
 # 4 Location
@@ -198,24 +198,24 @@ selected_Location = st.sidebar.multiselect('Location',
                                              default=["Select All"] )
 
 #==========================================================================
-# Applied Filters 
+# Applied Filters
 
 filterd_df = df.copy()
 
 if "Select All" not in selected_year:
     filterd_df = filterd_df[filterd_df['Year'].isin(selected_year)]
 
-if "Select All" not in selected_Category:    
+if "Select All" not in selected_Category:
     filterd_df=filterd_df[filterd_df['Category'].isin(selected_Category)]
 
-if "Select All" not in selected_Payment_Method:     
+if "Select All" not in selected_Payment_Method:
    filterd_df=filterd_df[filterd_df['Payment Method'].isin(selected_Payment_Method)]
 
-if "Select All" not in selected_Location:   
+if "Select All" not in selected_Location:
    filterd_df= filterd_df[filterd_df['Location'].isin(selected_Location)]
 
 #========================================================================
-# KPIs 
+# KPIs
 
 
 
@@ -235,7 +235,7 @@ with col1:
     <div class="kpi-card">
         <div class="kpi-title">Total Revenue</div>
         <div class="kpi-value">${Total_Revenue:,.0f}</div>
-    
+
     </div>
     """, unsafe_allow_html=True)
 
@@ -275,8 +275,8 @@ with col4:
 # Tabs for Product Analysis and  Customer Analysis
 
 tab1, tab2 ,tab3,tab4= st.tabs([
-    "📦 Product Analysis",
-    "👥 Customer Analysis",
+    " Product Analysis",
+    "Customer Analysis",
     "  Payment Analysis",
     "  Location Analysis"
 
